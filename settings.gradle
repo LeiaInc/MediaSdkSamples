@@ -1,0 +1,2 @@
+include ':sample-render-quad'
+rootProject.name = "MediaSdkSamples"

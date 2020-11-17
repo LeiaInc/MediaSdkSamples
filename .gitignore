@@ -1,0 +1,15 @@
+.idea
+.idea/gradle.xml
+gradle.xml
+.gradle
+*.iml
+build
+app/release
+app/normal
+app/nightly/
+app/dev/
+local.properties
+captures/
+.DS_Store
+node_modules/
+package-lock.json
