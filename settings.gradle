@@ -1,2 +1,3 @@
+include ':sample-render-lif'
 include ':sample-render-quad'
 rootProject.name = "MediaSdkSamples"
