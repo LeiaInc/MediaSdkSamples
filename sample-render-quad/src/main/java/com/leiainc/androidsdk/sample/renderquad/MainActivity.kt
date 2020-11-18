@@ -1,6 +1,7 @@
 package com.leiainc.androidsdk.sample.renderquad
 
 import android.graphics.BitmapFactory
+import android.icu.number.Scale
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -16,9 +17,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val quadView: QuadView = findViewById(R.id.quad_view)
+        /* Get Bitmap for Quad in the resource directory */
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.optician_2x2)
 
+        /*  Set scale type */
         quadView.scaleType = ScaleType.FIT_CENTER
+
+        /* Set the Quad Bitmap in the QuadView */
         quadView.setQuadBitmap(bitmap)
     }
 
