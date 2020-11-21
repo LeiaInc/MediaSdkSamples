@@ -29,7 +29,7 @@ class SbsVideoActivity : AppCompatActivity(), SurfaceTextureReadyCallback {
         setContentView(R.layout.activity_sbs_video)
         val quadView: QuadView = findViewById(R.id.quad_view)
         exoPlayer = SimpleExoPlayer.Builder(this).build()
-        quadView.getInputSurfaceTexture(this, QuadView.ViewLayout.VIEW_2x2)
+        quadView.getInputSurfaceTexture(this)
     }
 
     override fun onSurfaceTextureReady(surfaceTexture: SurfaceTexture?) {
