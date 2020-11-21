@@ -11,4 +11,4 @@ Repository containing samples demonstrating the usage of Leia Android Media SDK
 # Documentation
 You can find the documentation for using the Leia Android Media SDK here
 
-[Leia Android Media SDK Documentation] (https://docs.leialoft.com/leia-android-media-sdk/)
+[Leia Android Media SDK Documentation](https://docs.leialoft.com/leia-android-media-sdk/)

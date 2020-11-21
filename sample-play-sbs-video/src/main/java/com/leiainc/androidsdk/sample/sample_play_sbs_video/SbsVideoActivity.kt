@@ -21,6 +21,7 @@ import com.leiainc.androidsdk.sbs.video.SbsVideoSurfaceRenderer
 import com.leiainc.androidsdk.sbs.video.TextureShape
 
 class SbsVideoActivity : AppCompatActivity(), SurfaceTextureReadyCallback {
+
     private lateinit var exoPlayer: SimpleExoPlayer
     var mSbsVideoSurfaceRenderer: SbsVideoSurfaceRenderer?= null
 
