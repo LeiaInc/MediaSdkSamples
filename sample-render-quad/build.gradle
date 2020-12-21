@@ -47,5 +47,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     /*  1) Android Media SDK dependency */
-    implementation 'com.leiainc:androidmediasdk:0.0.1'
+    implementation 'com.leiainc:androidmediasdk:0.0.2'
 }

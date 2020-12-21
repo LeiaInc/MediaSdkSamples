@@ -47,5 +47,5 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     /*  Android Media SDK dependency */
-    implementation 'com.leiainc:androidmediasdk:0.0.1'
+    implementation 'com.leiainc:androidmediasdk:0.0.2'
 }
