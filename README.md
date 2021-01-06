@@ -1,5 +1,8 @@
 # MediaSdkSamples
-Repository containing samples demonstrating the usage of Leia Android Media SDK
+Samples demonstrating the usage of Leia Android Media SDK
+
+
+[![Circle CI](https://circleci.com/gh/LeiaInc/MediaSdkSamples.svg?style=svg)](https://circleci.com/gh/LeiaInc/MediaSdkSamples)
 
 # App Catalogue
 - Sample app to display a 2x2 image using a QuadView
