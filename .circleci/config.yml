@@ -16,63 +16,13 @@ jobs:
           keys:
           - v2-dependencies-{{ checksum "app/build.gradle" }}-{{ checksum ".circleci/config.yml" }}
 
-      # Test the code!
-      - run: ./gradlew lintRedRelease
-      - run: ./gradlew testRedRelease
-      - run: ./gradlew assembleRedRelease
-
-      - store_test_results:
-          path: ./app/build/test-results/testRedReleaseUnitTest
+      - run: ./gradlew assembleDebug
 
       # Save cache.
       - save_cache:
           paths:
             - ~/.gradle
           key: v2-dependencies-{{ checksum "app/build.gradle" }}-{{ checksum ".circleci/config.yml" }}
-
-
-  # Note: This job is not run on every commit, only on nightly and beta branches.
-  assemble_and_deploy_release_build:
-    docker:
-      - image: circleci/android:api-28
-
-    steps:
-      - run: sudo apt update; sudo apt install ruby python3-pip
-      - checkout
-      - run: pip3 install --user git+ssh://git@github.com/LeiaInc/auto-resolve.git
-      - run: git config --global user.email "Leia-Codacy-Bot@leiainc.com"
-      - run: git config --global user.name "Auto build"
-      - run: bundle install
-      - run: bundle exec fastlane ${CIRCLE_BRANCH}
-
-  # Merges to the dev branch. This is run from the beta and nightly branches.
-  merge_to_dev:
-    docker:
-      - image: circleci/android:api-28
-
-    environment:
-      TERM: dumb
-
-    steps:
-      - checkout
-      - run: git config --global user.email "Leia-Codacy-Bot@leiainc.com"
-      - run: git config --global user.name "Auto build"
-      - run: git fetch; git checkout dev; git reset --hard origin/dev; git merge --no-edit origin/${CIRCLE_BRANCH}; git push
-
-  # Merges to nightly branch. This is run automatically once a day.
-  # TODO: There is duplication between this and `merge_to_dev`, but not sure how to consolidate.
-  merge_to_nightly:
-    docker:
-      - image: circleci/android:api-28
-
-    environment:
-      TERM: dumb
-
-    steps:
-      - checkout
-      - run: git config --global user.email "Leia-Codacy-Bot@leiainc.com"
-      - run: git config --global user.name "Auto build"
-      - run: git fetch; git checkout nightly; git reset --hard origin/nightly; git merge --no-edit origin/${CIRCLE_BRANCH}; git push
 
 
 workflows:
@@ -82,36 +32,3 @@ workflows:
   build_and_test:
     jobs:
       - assemble_and_test
-
-  # Only on nightly and beta branches, deploy nightly and beta builds respectively.
-  build_and_deploy:
-    jobs:
-      - assemble_and_deploy_release_build:
-          filters:
-            branches:
-              only: # Only run from the nightly and beta branches.
-                - nightly
-                - beta
-
-  # Only on nightly and beta branches, merge to dev branch.
-  merge_to_dev:
-    jobs:
-      - merge_to_dev:
-          filters:
-            branches:
-              only: # Only run from the nightly and beta branches.
-                - nightly
-                - beta
-
-  # Twice a day (at 2:00 PDT/9:00 UTC, and 13:00 PDT/20:00 UTC),
-  # merge from dev to nightly to trigger a new nightly build.
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0 9,20 * * *"
-          filters:
-            branches:
-              only:
-                - dev
-    jobs:
-      - merge_to_nightly
