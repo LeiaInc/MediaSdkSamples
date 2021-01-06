@@ -1,0 +1,33 @@
+# Gradle CircleCI 2.0 configuration file
+
+version: 2
+jobs:
+
+  assemble_and_test:
+    docker:
+     - image: circleci/android:api-30
+
+    steps:
+      - checkout
+
+      # Download cached dependencies.
+      - restore_cache:
+          keys:
+          - v2-dependencies-{{ checksum ".circleci/config.yml" }}
+
+      - run: ./gradlew assembleDebug
+
+      # Save cache.
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v2-dependencies-{{ checksum ".circleci/config.yml" }}
+
+
+workflows:
+  version: 2
+
+  # On every branch, assemble and test the build.
+  build_and_test:
+    jobs:
+      - assemble_and_test
