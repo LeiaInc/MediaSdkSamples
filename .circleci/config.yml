@@ -13,7 +13,7 @@ jobs:
       # Download cached dependencies.
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "app/build.gradle" }}-{{ checksum ".circleci/config.yml" }}
+          - v2-dependencies-{{ checksum ".circleci/config.yml" }}
 
       - run: ./gradlew assembleDebug
 
@@ -21,7 +21,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v2-dependencies-{{ checksum "app/build.gradle" }}-{{ checksum ".circleci/config.yml" }}
+          key: v2-dependencies-{{ checksum ".circleci/config.yml" }}
 
 
 workflows:
