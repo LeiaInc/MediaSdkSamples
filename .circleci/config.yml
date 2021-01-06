@@ -8,7 +8,6 @@ jobs:
      - image: circleci/android:api-29
 
     steps:
-
       - checkout
 
       # Download cached dependencies.
