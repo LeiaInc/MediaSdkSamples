@@ -1,3 +1,4 @@
+include ':sample-leiacam-image-capture'
 include ':sample-play-sbs-video'
 include ':sample-play-video'
 include ':sample-render-sbs'
