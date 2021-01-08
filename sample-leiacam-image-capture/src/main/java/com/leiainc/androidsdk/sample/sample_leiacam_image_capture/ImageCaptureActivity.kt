@@ -25,8 +25,6 @@ class ImageCaptureActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<ImageCaptureViewModel>()
 
-    lateinit var currentPhotoUri: Uri  // Saved location for clicked image.
-
     private var _binding: ActivityImageCaptureBinding? = null
     private val binding get() = _binding!!
 
@@ -53,39 +51,10 @@ class ImageCaptureActivity : AppCompatActivity() {
         viewModel.quadBitmapLiveData.observe(this, quadBitmapObserver)
 
         binding.cancelButton.setOnClickListener {
+            /*  Delete image and Clear live data. */
             viewModel.clearImage()
+
             toggleBacklight(false)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
-            viewModel.loadImage(currentPhotoUri)
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-                "JPEG_${timeStamp}_", /* prefix */
-                ".jpg", /* suffix */
-                storageDir /* directory */
-        )
-    }
-
-    private fun toggleImageUI(showImage: Boolean) {
-        if (showImage) {
-            binding.cancelButton.visibility = View.VISIBLE
-            binding.quadView.visibility = View.VISIBLE
-            binding.takePhotoBtn.visibility = View.GONE
-        } else {
-            binding.cancelButton.visibility = View.GONE
-            binding.quadView.visibility = View.GONE
-            binding.takePhotoBtn.visibility = View.VISIBLE
         }
     }
 
@@ -110,13 +79,44 @@ class ImageCaptureActivity : AppCompatActivity() {
                             it
                     )
 
-                    currentPhotoUri = photoURI
+                    viewModel.currentPhotoUri = photoURI
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
                 }
             }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+                "JPEG_${timeStamp}_", /* prefix */
+                ".jpg", /* suffix */
+                storageDir /* directory */
+        )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
+            viewModel.loadImage()
+        }
+    }
+
+    private fun toggleImageUI(showImage: Boolean) {
+        if (showImage) {
+            binding.cancelButton.visibility = View.VISIBLE
+            binding.quadView.visibility = View.VISIBLE
+            binding.takePhotoBtn.visibility = View.GONE
+        } else {
+            binding.cancelButton.visibility = View.GONE
+            binding.quadView.visibility = View.GONE
+            binding.takePhotoBtn.visibility = View.VISIBLE
         }
     }
 

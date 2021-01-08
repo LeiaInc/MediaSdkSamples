@@ -13,15 +13,15 @@ import kotlinx.coroutines.launch
 
 class ImageCaptureViewModel(application: Application): AndroidViewModel(application) {
 
-    val quadBitmapLiveData: MutableLiveData<Bitmap> by lazy {
-        MutableLiveData<Bitmap>()
-    }
+    val quadBitmapLiveData: MutableLiveData<Bitmap> by lazy { MutableLiveData<Bitmap>() }
 
-    fun loadImage(uri: Uri) = viewModelScope.launch(Dispatchers.IO) {
+    lateinit var currentPhotoUri: Uri  // Saved location for clicked image.
+
+    fun loadImage() = viewModelScope.launch(Dispatchers.IO) {
         val context = getApplication<Application>().applicationContext
 
         /* This function searches for the Uri of the file name stored on the internal storage as 'farm-lif.jpg'. */
-        val multiviewImage = MultiviewImageDecoder.getDefault().unsafeDecode(context, uri, 1280 * 720)
+        val multiviewImage = MultiviewImageDecoder.getDefault().decode(context, currentPhotoUri, 1280 * 720)
 
         /*  Decoder returns null if */
         if (multiviewImage != null) {
@@ -36,7 +36,14 @@ class ImageCaptureViewModel(application: Application): AndroidViewModel(applicat
         quadBitmapLiveData.postValue(null)
     }
 
-    fun clearImage() {
+    /**
+     * Deletes image from files directory. Runs this on IO thread.
+     * Clears live data to trigger UI update
+     */
+    fun clearImage() = viewModelScope.launch(Dispatchers.IO) {
+        val context = getApplication<Application>().applicationContext
+        context.contentResolver.delete(currentPhotoUri, null, null)
+
         quadBitmapLiveData.postValue(null)
     }
 }
